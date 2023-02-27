@@ -1,5 +1,6 @@
 package com.tomerpacific.jetpackcomposetabs.ui.view
 
+import android.app.Application
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
@@ -8,6 +9,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import com.tomerpacific.jetpackcomposetabs.MainViewModel
 
 @Composable
@@ -36,4 +39,10 @@ fun TabLayout(viewModel: MainViewModel) {
             2 -> SettingsScreen(viewModel = viewModel)
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun TabLayoutPreview() {
+    TabLayout(viewModel = MainViewModel())
 }
