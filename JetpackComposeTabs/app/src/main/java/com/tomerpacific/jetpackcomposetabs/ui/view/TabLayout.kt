@@ -33,7 +33,7 @@ data class WebState(
     val url:MutableState<String>,
     val state: WebViewState,
     val navigator: WebViewNavigator,
-    val webClient: MyWebClient,
+    val webClient: MyWebViewClient,
     val chromeClient: MyChromeClient
 )
 
@@ -80,7 +80,7 @@ class MyChromeClient: AccompanistWebChromeClient() {
     }
 }
 
-class MyWebClient(
+class MyWebViewClient(
     val onPageCommitAvailable: () -> Unit = {}
 ): AccompanistWebViewClient() {
     var isAlreadyLoadedFromWeb = false
@@ -130,7 +130,7 @@ fun TabLayout(viewModel: MainViewModel) {
         MyChromeClient()
     }
     val webClient = remember {
-        MyWebClient(
+        MyWebViewClient(
             onPageCommitAvailable =  {
                 chromeClient.scrollToSavedPosition()
             }

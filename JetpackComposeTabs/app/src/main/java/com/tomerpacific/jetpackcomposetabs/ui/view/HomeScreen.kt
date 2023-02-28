@@ -1,6 +1,5 @@
 package com.tomerpacific.jetpackcomposetabs.ui.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -76,7 +75,7 @@ fun WebBrowser(
     url: MutableState<String>, // = remember { mutableStateOf("https://www.ssec.wisc.edu/data/us_comp/large") },
     state: WebViewState, // = rememberWebViewState(url = url.value),
     navigator: WebViewNavigator, // = rememberWebViewNavigator(),
-    webClient: MyWebClient,
+    webClient: MyWebViewClient,
     chromeClient: MyChromeClient
 ) {
 //    var url = remember { mutableStateOf("https://www.ssec.wisc.edu/data/us_comp/large") }
@@ -219,12 +218,6 @@ fun WebBrowser(
 //                       document.body.addEventListener('load',(event) => {
 //                           console.log('Page loaded...');
 //                       });
-
-                        document.onreadystatechange = () => {
-                          if (document.readyState === 'complete') {
-                             console.log('Page loaded...');
-                          }
-                        };
                        
 //                       let stateCheck = setInterval(() => {
 //                          let state = document.readyState;
@@ -243,7 +236,11 @@ fun WebBrowser(
                     var oldScrollY = -1
 
                     println("PRE isPageFinished: ${webClient.isPageFinished}, isScrollSet: ${chromeClient.isScrollSet}")
-                    while(!webClient.isPageFinished || !chromeClient.isScrollSet || !chromeClient.isProgress100) {
+                    while(
+                        !webClient.isPageFinished
+                        || !chromeClient.isScrollSet
+                        || !chromeClient.isProgress100
+                    ) {
                         println("IN Waiting for page to finish loading... isPageFinished: ${webClient.isPageFinished}, isScrollSet: ${chromeClient.isScrollSet}")
                         delay(150)
                     }
