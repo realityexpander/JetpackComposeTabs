@@ -2,10 +2,16 @@ package com.tomerpacific.jetpackcomposetabs
 
 import android.app.Application
 import androidx.compose.foundation.gestures.DraggableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.accompanist.web.rememberWebViewNavigator
+import com.google.accompanist.web.rememberWebViewState
 
 //class MainViewModel(application: Application) : AndroidViewModel(application) {
 class MainViewModel : ViewModel() {
