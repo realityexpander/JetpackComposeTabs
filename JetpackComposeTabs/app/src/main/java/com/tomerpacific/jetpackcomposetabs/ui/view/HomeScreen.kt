@@ -1,5 +1,6 @@
 package com.tomerpacific.jetpackcomposetabs.ui.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -35,7 +36,6 @@ import com.google.accompanist.web.WebViewState
 import com.tomerpacific.jetpackcomposetabs.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 
 @Composable
 fun HomeScreen(
@@ -211,13 +211,39 @@ fun WebBrowser(
                 webView.settings.javaScriptEnabled = true
 //                webView.scrollTo(chromeClient.scrollX, chromeClient.scrollY)
                 chromeClient.isScrollSet = false
+                webClient.isPageFinished = false
+                chromeClient.isProgress100 = false
+
+                webView.evaluateJavascript(
+                    """
+//                       document.body.addEventListener('load',(event) => {
+//                           console.log('Page loaded...');
+//                       });
+
+                        document.onreadystatechange = () => {
+                          if (document.readyState === 'complete') {
+                             console.log('Page loaded...');
+                          }
+                        };
+                       
+//                       let stateCheck = setInterval(() => {
+//                          let state = document.readyState;
+//                          console.log('Checking document ready state...' + state);
+//                          if (document.readyState === 'complete') { 
+//                             clearInterval(stateCheck); // document ready 
+//                          } 
+//                       }, 100)
+                       
+                    """.trimIndent()
+                ) {}
+                //{ value -> Log.d("WebView", "Value received: $value") }
 
                 coroutineScope.launch {
                     var oldScrollX = -1
                     var oldScrollY = -1
 
                     println("PRE isPageFinished: ${webClient.isPageFinished}, isScrollSet: ${chromeClient.isScrollSet}")
-                    while(!webClient.isPageFinished || !chromeClient.isScrollSet) {
+                    while(!webClient.isPageFinished || !chromeClient.isScrollSet || !chromeClient.isProgress100) {
                         println("IN Waiting for page to finish loading... isPageFinished: ${webClient.isPageFinished}, isScrollSet: ${chromeClient.isScrollSet}")
                         delay(150)
                     }
@@ -255,6 +281,7 @@ fun WebBrowser(
 ////                        };
 //                    """.trimIndent()
 //                    ) { value -> Log.d("WebView", "Value received: $value") }
+
                 }
             },
             client = webClient,

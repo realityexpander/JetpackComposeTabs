@@ -42,10 +42,15 @@ class MyChromeClient: AccompanistWebChromeClient() {
     var scrollY = 0
     var webView: WebView? = null
     var isScrollSet = false
+    var isProgress100 = false
 
     override fun onProgressChanged(view: WebView?, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
         //Log.d("Accompanist WebView", "Progress changed to $newProgress")
+        println("Progress $newProgress")
+        if (newProgress == 100) {
+            isProgress100 = true
+        }
     }
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
@@ -76,7 +81,7 @@ class MyChromeClient: AccompanistWebChromeClient() {
 }
 
 class MyWebClient(
-    val onPageFinished: () -> Unit = {}
+    val onPageCommitAvailable: () -> Unit = {}
 ): AccompanistWebViewClient() {
     var isAlreadyLoadedFromWeb = false
     var isPageFinished = false
@@ -109,7 +114,7 @@ class MyWebClient(
     override fun onPageCommitVisible(view: WebView?, url: String?) {
         super.onPageCommitVisible(view, url)
         Log.d("Accompanist WebView", "Page commit visible for $url")
-        onPageFinished()
+        onPageCommitAvailable()
     }
 }
 
@@ -126,7 +131,7 @@ fun TabLayout(viewModel: MainViewModel) {
     }
     val webClient = remember {
         MyWebClient(
-            onPageFinished =  {
+            onPageCommitAvailable =  {
                 chromeClient.scrollToSavedPosition()
             }
         )
